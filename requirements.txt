@@ -1,0 +1,15 @@
+mindee
+python-dotenv
+pydantic>=2.0
+pytest
+sentence-transformers
+lightgbm
+scikit-learn
+numpy
+joblib
+faiss-cpu
+torch --index-url https://download.pytorch.org/whl/cpu
+scipy
+prophet
+pandas
+google-generativeai>=0.8.0

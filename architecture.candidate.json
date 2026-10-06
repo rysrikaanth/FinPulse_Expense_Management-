@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Expense Intelligence Platform — System Architecture",
+    "output": "architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Users & Reviewers",
+      "sublabel": "Employees / Managers",
+      "tag": "RBAC Role",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 60]
+    },
+    {
+      "id": "auth",
+      "type": "security",
+      "label": "Auth & RBAC",
+      "sublabel": "auth/users.py · Role DB",
+      "tag": "User / Admin",
+      "icon": "security",
+      "pos": [40, 240],
+      "size": [140, 60]
+    },
+    {
+      "id": "dashboard",
+      "type": "frontend",
+      "label": "Streamlit UI",
+      "sublabel": "Port 8501 · Web App",
+      "tag": "Analytics & Claims",
+      "icon": "frontend",
+      "pos": [260, 80],
+      "size": [150, 60]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "FastAPI Gateway",
+      "sublabel": "Port 8000 · REST Engine",
+      "tag": "CORS & Multipart",
+      "icon": "backend",
+      "brand": "fastapi",
+      "pos": [260, 240],
+      "size": [150, 60]
+    },
+    {
+      "id": "ocr_service",
+      "type": "cloud",
+      "label": "Mindee V2 OCR",
+      "sublabel": "ClientV2 Cloud API",
+      "tag": "Receipt Parser",
+      "icon": "cloud",
+      "pos": [500, 80],
+      "size": [150, 60]
+    },
+    {
+      "id": "normalizer",
+      "type": "backend",
+      "label": "Normalizer Engine",
+      "sublabel": "pipeline/normalizer.py",
+      "tag": "ExpenseRecord",
+      "icon": "backend",
+      "pos": [500, 240],
+      "size": [150, 60]
+    },
+    {
+      "id": "faiss_index",
+      "type": "database",
+      "label": "Faiss Vector Store",
+      "sublabel": "Flat L2 · SBERT 384d",
+      "tag": "Semantic Cache",
+      "icon": "database",
+      "pos": [740, 80],
+      "size": [150, 60]
+    },
+    {
+      "id": "dedup_engine",
+      "type": "backend",
+      "label": "Deduplication Engine",
+      "sublabel": "deduplication/resolver.py",
+      "tag": "Reject / Flag / Accept",
+      "icon": "backend",
+      "pos": [740, 240],
+      "size": [150, 60]
+    },
+    {
+      "id": "categorizer",
+      "type": "backend",
+      "label": "ML Categorizer",
+      "sublabel": "LightGBM + SBERT 387d",
+      "tag": "10-Class Taxonomy",
+      "icon": "backend",
+      "pos": [980, 80],
+      "size": [150, 60]
+    },
+    {
+      "id": "anomaly_ensemble",
+      "type": "backend",
+      "label": "Anomaly Ensemble",
+      "sublabel": "IForest + Autoencoder",
+      "tag": "Unsupervised",
+      "icon": "backend",
+      "pos": [980, 240],
+      "size": [150, 60]
+    },
+    {
+      "id": "rag_retriever",
+      "type": "backend",
+      "label": "RAG Insights Engine",
+      "sublabel": "insights/rag_retriever.py",
+      "tag": "Context & KPIs",
+      "icon": "backend",
+      "pos": [500, 400],
+      "size": [150, 60]
+    },
+    {
+      "id": "gemini_llm",
+      "type": "cloud",
+      "label": "Gemini 2.5 Flash",
+      "sublabel": "Google GenAI API",
+      "tag": "Fact Verified",
+      "icon": "cloud",
+      "pos": [500, 560],
+      "size": [150, 60]
+    },
+    {
+      "id": "expense_store",
+      "type": "database",
+      "label": "Per-User Expense Store",
+      "sublabel": "JSONL · data/{user}/",
+      "tag": "Flat-file DB",
+      "icon": "database",
+      "pos": [740, 400],
+      "size": [150, 60]
+    },
+    {
+      "id": "forecasting",
+      "type": "backend",
+      "label": "Prophet Forecasting",
+      "sublabel": "forecasting/prophet_model.py",
+      "tag": "30-Day Projections",
+      "icon": "backend",
+      "pos": [740, 560],
+      "size": [150, 60]
+    },
+    {
+      "id": "explainability",
+      "type": "backend",
+      "label": "SHAP Explainability",
+      "sublabel": "api/explainability.py",
+      "tag": "TreeExplainer",
+      "icon": "backend",
+      "pos": [980, 400],
+      "size": [150, 60]
+    },
+    {
+      "id": "budget_alerts",
+      "type": "backend",
+      "label": "Budget Early Warning",
+      "sublabel": "forecasting/early_warning.py",
+      "tag": "Burn Rate Alerts",
+      "icon": "backend",
+      "pos": [980, 560],
+      "size": [150, 60]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Docker Container Runtime (expense_api & expense_dashboard)",
+      "wraps": [
+        "dashboard",
+        "api",
+        "auth",
+        "normalizer",
+        "dedup_engine",
+        "faiss_index",
+        "categorizer",
+        "anomaly_ensemble",
+        "rag_retriever",
+        "expense_store",
+        "forecasting",
+        "explainability",
+        "budget_alerts"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "ML Intelligence & Pipeline Core",
+      "wraps": [
+        "categorizer",
+        "anomaly_ensemble",
+        "explainability",
+        "forecasting",
+        "budget_alerts"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "users-to-dashboard",
+      "from": "users",
+      "to": "dashboard",
+      "label": "Web UI :8501",
+      "variant": "emphasis"
+    },
+    {
+      "id": "users-to-auth",
+      "from": "users",
+      "to": "auth",
+      "label": "Credentials",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "auth-to-api",
+      "from": "auth",
+      "to": "api",
+      "label": "Verify RBAC",
+      "variant": "security"
+    },
+    {
+      "id": "dashboard-to-api",
+      "from": "dashboard",
+      "to": "api",
+      "label": "REST :8000",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "api-to-normalizer",
+      "from": "api",
+      "to": "normalizer",
+      "label": "Ingest image"
+    },
+    {
+      "id": "normalizer-to-ocr",
+      "from": "normalizer",
+      "to": "ocr_service",
+      "label": "Mindee OCR",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "normalizer-to-dedup",
+      "from": "normalizer",
+      "to": "dedup_engine",
+      "label": "Record"
+    },
+    {
+      "id": "dedup-to-faiss",
+      "from": "dedup_engine",
+      "to": "faiss_index",
+      "label": "Faiss L2 query",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "dedup-to-store",
+      "from": "dedup_engine",
+      "to": "expense_store",
+      "label": "Persist record",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "dedup-to-anomaly",
+      "from": "dedup_engine",
+      "to": "anomaly_ensemble",
+      "label": "Score transaction"
+    },
+    {
+      "id": "anomaly-to-categorizer",
+      "from": "anomaly_ensemble",
+      "to": "categorizer",
+      "label": "Category baseline",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "anomaly-to-explain",
+      "from": "anomaly_ensemble",
+      "to": "explainability",
+      "label": "Attributions",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "store-to-rag",
+      "from": "expense_store",
+      "to": "rag_retriever",
+      "label": "Query stats",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "rag-to-gemini",
+      "from": "rag_retriever",
+      "to": "gemini_llm",
+      "label": "Grounded prompt",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "store-to-forecasting",
+      "from": "expense_store",
+      "to": "forecasting",
+      "label": "Daily series",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "forecasting-to-budget",
+      "from": "forecasting",
+      "to": "budget_alerts",
+      "label": "Forecast vs limit"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Ingestion & Deduplication Pipeline",
+      "items": [
+        "Mindee V2 OCR extracts line items, totals, dates, and vendor names with confidence scoring",
+        "Normalizer maps raw API payloads into canonical ExpenseRecord Pydantic models",
+        "Dual deduplication: SHA-256 fingerprint exact match + Faiss L2 SBERT semantic vector search",
+        "Tri-state resolver triage: reject duplicate, flag ambiguous match, or accept unique expense"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "ML Categorization & Anomaly Detection",
+      "items": [
+        "LightGBM multi-class categorizer trained on 387-dim features (384 SBERT embeddings + 3 scalar signals)",
+        "Ensemble anomaly detection combining Per-User Isolation Forest and PyTorch Deep Autoencoder",
+        "SHAP TreeExplainer feature attributions for human-in-the-loop review transparency"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Forecasting & Early Warning",
+      "items": [
+        "Facebook Prophet time-series models predict category-specific spend 30 days ahead with uncertainty intervals",
+        "Early warning engine tracks burn rate against user monthly limits to alert before budget overrun"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "RAG Insights & Multi-Role Governance",
+      "items": [
+        "RAG context builder injects user KPIs, spending trends, and anomalies into Gemini 2.5 Flash prompts",
+        "Hallucination checker verifies generated insights against retrieved numerical data",
+        "Role-based views in Streamlit dashboard (User: claim submission & status; Admin: analytics & review queue)"
+      ]
+    }
+  ]
+}

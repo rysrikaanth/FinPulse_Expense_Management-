@@ -1,0 +1,72 @@
+{
+  "admin": {
+    "password_hash": "7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358",
+    "role": "admin",
+    "display_name": "Vikram Nair (Admin)",
+    "user_id": "admin",
+    "position": "Finance Controller",
+    "department": "Finance",
+    "monthly_limits": {}
+  },
+  "rahul_m": {
+    "password_hash": "9ab4755859d07910efc426816e325698c82911bdb6ef1a0e67415daeae1766d3",
+    "role": "user",
+    "display_name": "Rahul Mehta",
+    "user_id": "user_rahul",
+    "position": "Senior Software Engineer",
+    "department": "Engineering",
+    "monthly_limits": {
+      "meals": 8000,
+      "transport": 10000,
+      "accommodation": 30000,
+      "equipment": 15000,
+      "training": 5000,
+      "internet": 2000
+    }
+  },
+  "priya_s": {
+    "password_hash": "c9b3281f6b43e0fb97b5c34d2e3f225c17c83c42453e29b0c8b3982bcf7a873a",
+    "role": "user",
+    "display_name": "Priya Sharma",
+    "user_id": "user_priya",
+    "position": "Sales Manager",
+    "department": "Sales & Business Development",
+    "monthly_limits": {
+      "meals": 20000,
+      "transport": 40000,
+      "accommodation": 60000,
+      "client_gifts": 5000,
+      "conference": 10000
+    }
+  },
+  "arjun_k": {
+    "password_hash": "45fd6a9964b62718551c0930c145586775504b3f5bd5b17fe877ff0020bc2345",
+    "role": "user",
+    "display_name": "Arjun Kumar",
+    "user_id": "user_arjun",
+    "position": "Junior Software Developer",
+    "department": "Engineering",
+    "monthly_limits": {
+      "meals": 4000,
+      "transport": 3000,
+      "internet": 1000,
+      "training": 3000
+    }
+  },
+  "sneha_r": {
+    "password_hash": "d9de053f8b17bec5ddcc313f5fea0ba9577e0b112bd875e4c1c6e4478d805dc3",
+    "role": "user",
+    "display_name": "Sneha Rao",
+    "user_id": "user_sneha",
+    "position": "Product Manager",
+    "department": "Product",
+    "monthly_limits": {
+      "meals": 12000,
+      "transport": 15000,
+      "accommodation": 25000,
+      "software": 10000,
+      "conference": 15000,
+      "training": 5000
+    }
+  }
+}
